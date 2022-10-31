@@ -7,3 +7,6 @@ argcomplete==2.0.0
 joblib==1.1.0
 pylint==2.13.7
 pytest==7.1.2
+werkzeug==2.0.3
+Jinja2==3.0.3
+itsdangerous==2.0.1
