@@ -6,7 +6,6 @@ trigger:
 - main
 
 # TODO: Replace the agent pool name
-pool: Default
 
 variables:
   # TODO: Replace the service connection name as used in the DevOps project settings
@@ -26,7 +25,6 @@ stages:
   displayName: Build stage
   jobs:
   - job: BuildJob
-    pool: Default
     steps:    
     - script: |
         python3.7 -m pip install --upgrade pip
