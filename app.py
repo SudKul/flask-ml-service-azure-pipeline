@@ -14,7 +14,7 @@ LOG.setLevel(logging.INFO)
 def scale(payload):
     """Scales Payload"""
 
-    LOG.info("Scaling Payload: %s payload")
+    LOG.info("Scaling Payload: %s", payload)
     scaler = StandardScaler().fit(payload)
     scaled_adhoc_predict = scaler.transform(payload)
     return scaled_adhoc_predict
@@ -27,47 +27,24 @@ def home():
 # TO DO:  Log out the prediction value
 @app.route("/predict", methods=['POST'])
 def predict():
-    """Performs an sklearn prediction
-
-    input looks like:
-            {
-    "CHAS":{
-      "0":0
-    },
-    "RM":{
-      "0":6.575
-    },
-    "TAX":{
-      "0":296.0
-    },
-    "PTRATIO":{
-       "0":15.3
-    },
-    "B":{
-       "0":396.9
-    },
-    "LSTAT":{
-       "0":4.98
-    }
-
-    result looks like:
-    { "prediction": [ 20.35373177134412 ] }
-
-    """
-
     try:
-        clf = joblib.load("boston_housing_prediction.joblib")
+      # Load pretrained model as clf. Try any one model. 
+      # clf = joblib.load("./Housing_price_model/LinearRegression.joblib")
+      # clf = joblib.load("./Housing_price_model/StochasticGradientDescent.joblib")
+      clf = joblib.load("./Housing_price_model/GradientBoostingRegressor.joblib")
     except Exception as e:
-        print(e)
-        LOG.info("JSON payload: %s json_payload")
-        # return "Model not loaded"
-        return e
+      print(e)
+      return "Model not loaded \n"
 
     json_payload = request.json
     LOG.info("JSON payload: %s json_payload")
+
     inference_payload = pd.DataFrame(json_payload)
-    LOG.info("inference payload DataFrame: %s inference_payload")
+    LOG.info("inference payload DataFrame: %s", inference_payload)
+
     scaled_payload = scale(inference_payload)
+    LOG.info("Scaled payload DataFrame: %s", scaled_payload)
+    
     prediction = list(clf.predict(scaled_payload))
     return jsonify({'prediction': prediction})
 
